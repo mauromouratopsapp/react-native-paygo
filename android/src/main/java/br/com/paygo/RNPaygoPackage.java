@@ -1,5 +1,5 @@
 
-package com.gertecpinpad;
+package br.com.paygo;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,11 +11,11 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.JavaScriptModule;
 
-public class RNGertecPinpadPackage implements ReactPackage {
+public class RNPaygoPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
       return Arrays.asList(new NativeModule[]{
-              new RNGertecPinpadModule(reactContext),
+              new RNPaygoModule(reactContext),
       });
   }
     // Deprecated from RN 0.47

@@ -1,5 +1,5 @@
 
 import { NativeModules } from 'react-native';
-const { RNGertecPinpad } = NativeModules;
+const { RNPaygo } = NativeModules;
 
-export default RNGertecPinpad;
+export default RNPaygo;

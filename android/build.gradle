@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    implementation files('libs/gpinpad.jar')
+    implementation files('libs/InterfaceAutomacao-v1.8.0.0.aar')
     compile 'com.facebook.react:react-native:+'
 }
   
