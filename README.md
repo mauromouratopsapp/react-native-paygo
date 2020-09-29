@@ -281,7 +281,7 @@ Função utilizada para obter o comprovante da ultima transação. Esse é retor
 
 ```javascript
 //Exemplo de chamada.
-import {obter_comprovante} from 'react-native-payg
+import {obter_comprovante} from 'react-native-paygo';
 obter_comprovante(callback);
 ```
 ---
