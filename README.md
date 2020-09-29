@@ -1,7 +1,16 @@
 
 # react-native-paygo
 
-## Instalação (Instrução ser público, não está no NPM ainda);
+O *react-native-paygo* foi desenvolvido para facilitar a comunicação usando a biblioteca oficial PayGo para android ao *React Native*.
+Vale ressaltar que o seu uso é destinado aos produtos do GRUPO ADBRAX, caso ocorra a distribuição deste, não nos resposabilizamos e muito menos oferecemos suporte.
+
+Ainda é necessário que você *desenvolvedor* entre em contato com a equipa de suporta a integração/desenvolvedores para obter as credenciais e liberação do ponto de captura. (PINPAD)
+
+Mauro Moura
+mauro.moura@topsapp.com.br
+
+
+## Instalação (Instrução se público, não está no NPM ainda);
 
 `$ npm install react-native-paygo --save`
 
@@ -30,13 +39,13 @@
 ```javascript
 import * as RNPaygo from 'react-native-paygo';
 ou
-import { 
+import {
 	configurar_dados,
-    inicializar_paygo,
-    transacao_credito,
-    transacao_credito_parecelado,
-    transacao_debito,
-    obter_comprovante
+	inicializar_paygo,
+	transacao_credito,
+	transacao_credito_parecelado,
+	transacao_debito,
+	obter_comprovante
 } from 'react-native-paygo';
 
 //Exemplo
@@ -78,16 +87,16 @@ export default class App extends Component {
   validarDados = () => {
     const {nomeAutomacao, nomeEmpresa, valor, parcelas} = this.state;
     if(
-		nomeAutomacao.length > 0 && 
-		nomeEmpresa.length > 0 && 
-		valor.length > 0 && 
-		fatura.length > 0 && 
+		nomeAutomacao.length > 0 &&
+		nomeEmpresa.length > 0 &&
+		valor.length > 0 &&
+		fatura.length > 0 &&
 		parcelas > 0
 	){
       return true;
     }else{
       Alert.alert("Atenção!", "Todos os campos devem estar preenchidos!");
-      return false; 
+      return false;
     }
   }
 
@@ -173,17 +182,9 @@ export default class App extends Component {
 
 ```
 
-O *react-native-paygo* foi desenvolvido para facilitar a comunicação usando a biblioteca oficial PayGo para android ao *React Native*.
-Vale ressaltar que o seu uso é destinado aos produtos do GRUPO ADBRAX, caso ocorra a distribuição deste, não nos resposabilizamos e muito menos oferecemos suporte.
-
-Ainda é necessário que você *desenvolvedor* entre em contato com a equipa de suporta a integração/desenvolvedores para obter as credenciais e liberação do ponto de captura. (PINPAD)
-
-Mauro Moura
-mauro.moura@topsapp.com.br
-
 ## Documentação
 
-#####Observação:
+##### Observação:
 Os metodos criados na biblioteca principal são *void*, sendo necessário sempre passar um parâmetro para retorno denominado *callback.* Este deve ser uma função de retorno ou tratamento, depende a maneira como você usará o valor retornado. 
 
 Exemplo.
@@ -203,7 +204,7 @@ function callbackComprovante(value){
 }
 ```
 ---
-####configurar_dados
+#### configurar_dados
 Para iniciar qualquer transação, é necessário que os dados da automação estejam definidos. Além da instância da biblioteca principal da PayGo.
 
 | Parâmetro  | Obrigatório  | Tipo |
@@ -221,7 +222,7 @@ import {configurar_dados} from 'react-native-paygo';
 configurar_dados("IVE", "TOPSAPP", "1.0.0", true, true, callback);
 ```
 ---
-###inicializar_paygo
+#### inicializar_paygo
 Função para instanciar biblioteca principal, responsável por realizar os processos de transação. o *configurar_dados* já deve ter sido chamado.
 
 | Parâmetro  | Obrigatório  | Tipo |
@@ -235,7 +236,7 @@ inicializar_paygo(callback);
 ```
 ---
 
-###transacao_credito
+#### transacao_credito
 Função utilizada para realizar uma transação/venda com cartão de crédito á vista.
 
 | Parâmetro  | Obrigatório  | Tipo |
@@ -252,7 +253,7 @@ transacao_credito("1000", "1010", "1010", callback);
 ```
 ---
 
-###transacao_credito_parcelado
+#### transacao_credito_parcelado
 Função utilizada para realizar uma transação/venda com cartão de crédito parcelado.
 
 | Parâmetro  | Obrigatório  | Tipo |
@@ -270,7 +271,7 @@ transacao_credito_parcelado(5, "1000", "1010", "1010", callback);
 ```
 ---
 
-###transacao_debito
+#### transacao_debito
 Função utilizada para realizar uma transação/venda com cartão de débito á vista.
 
 | Parâmetro  | Obrigatório  | Tipo |
@@ -287,7 +288,7 @@ transacao_debito("1000", "1010","1010", callback);
 ```
 ---
 
-###obter_comprovante
+#### obter_comprovante
 Função utilizada para obter o comprovante da ultima transação. Esse é retornado a partir de uma lista de strings. Recomendo usar o *callbackComprovante* de exemplo para teste.
 
 | Parâmetro  | Obrigatório  | Tipo |
