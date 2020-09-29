@@ -13,6 +13,8 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import br.com.setis.interfaceautomacao.AplicacaoNaoInstaladaExcecao;
 import br.com.setis.interfaceautomacao.Cartoes;
 import br.com.setis.interfaceautomacao.Confirmacoes;
@@ -20,6 +22,8 @@ import br.com.setis.interfaceautomacao.DadosAutomacao;
 import br.com.setis.interfaceautomacao.EntradaTransacao;
 import br.com.setis.interfaceautomacao.Financiamentos;
 import br.com.setis.interfaceautomacao.Operacoes;
+import br.com.setis.interfaceautomacao.Personalizacao;
+import br.com.setis.interfaceautomacao.Provedores;
 import br.com.setis.interfaceautomacao.QuedaConexaoTerminalExcecao;
 import br.com.setis.interfaceautomacao.SaidaTransacao;
 import br.com.setis.interfaceautomacao.TerminalNaoConfiguradoExcecao;
@@ -36,10 +40,6 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
   private EntradaTransacao mEntradaTransacao = null;
   private SaidaTransacao mSaidaTransacao;
   private DadosAutomacao mDadosAutomacao;
-  private EditText mEntradaValor;
-  private TextView mDadosTransacao;
-  private TextView mTituloDados;
-  private CheckBox mConfManual;
   private boolean suportaViaDifer = false;
   private boolean suportaViaReduz = false;
 
@@ -51,7 +51,6 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
   private Boolean suporta_desconto = false;
 
   //Retorno venda
-  private String retornoText;
   private List<String> comprovante;
 
   public RNPaygoModule(ReactApplicationContext reactContext) {
@@ -59,12 +58,17 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
     this.reactContext = reactContext;
   }
 
+  /*
+  * Método que define o nome do Pacote
+  */
   @Override
   public String getName() {
     return "RNPaygo";
   }
 
-
+  /*
+   * Método responsável pelas configurações inicias do pacote.
+   */
   @ReactMethod
   public void setDadosAutomacao(String nomeEmpresa, String nomeAutomacao, String versaoAutomacao, Boolean suportaTroco, Boolean suportaDesconto, Callback callback){
     try {
@@ -80,6 +84,9 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
     }
   }
 
+  /*
+   * Método responsável por instanciar a biblioteca PAYGO.
+   */
   @ReactMethod
   public void inicializarPaygo(Callback callback){
     try {
@@ -92,14 +99,18 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
     }
   }
 
+  /*
+   * Método responsável por efetuar uma transação com CRÉDITO, sendo ela A VISTA ou PARCELADO.
+   */
   @ReactMethod
-  public void vendaCredito(Integer parcelas, String valor, String fiscal, final Callback callback){
+  public void vendaCredito(Integer parcelas, String valor, String fiscal, String fatura, final Callback callback){
     final String[] final_response = new String[1];
 
     mEntradaTransacao = new EntradaTransacao(Operacoes.VENDA, String.valueOf(new Random().nextLong()));
     mEntradaTransacao.informaDocumentoFiscal(fiscal);
     mEntradaTransacao.informaValorTotal(valor);
     mEntradaTransacao.informaCodigoMoeda("986");
+    mEntradaTransacao.informaNumeroFatura(fatura);
 
     mEntradaTransacao.informaTipoCartao(Cartoes.CARTAO_CREDITO);
     if(parcelas > 1){
@@ -139,7 +150,7 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
           mEntradaTransacao = null;
 
           if(mSaidaTransacao.obtemInformacaoConfirmacao() == true){
-            if(mSaidaTransacao.obtemMensagemResultado().trim() == "Transacao Autorizada"){
+            if(mSaidaTransacao.obtemResultadoTransacao() == 0){
               final_response[0] = "{"+"'resultado':'"+mSaidaTransacao.obtemMensagemResultado().trim()+"',"+"'status':true, 'comprovante': true}";
               setComprovante(mSaidaTransacao.obtemComprovanteCompleto());
               callback.invoke(final_response[0]);
@@ -151,18 +162,16 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
             final_response[0] = "{"+"'resultado:':'"+mSaidaTransacao.obtemMensagemResultado().trim()+"',"+"'status':false, 'comprovante': false}";
             callback.invoke(final_response[0]);
           }
-
-//          System.out.println(mSaidaTransacao.obtemResultadoTransacao());
-//          System.out.println(mSaidaTransacao.obtemMensagemResultado());
-          /*
-           * Autorizada: Cód 0 - Texto Transacao autorizada
-           * Cancelada: Cód 2491 - Texto OPERACAO CANCELADA
-           * */
+          //          System.out.println(mSaidaTransacao.obtemResultadoTransacao());
+          //          System.out.println(mSaidaTransacao.obtemMensagemResultado());
         }
       }
     }).start();
   }
 
+  /*
+   * Método responsável por efetuar uma transação com DÉBITO A VISTA.
+   */
   @ReactMethod
   public void vendaDebito(String valor, String fiscal, final Callback callback){
     final String[] final_response = new String[1];
@@ -223,15 +232,16 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
     }).start();
   }
 
+  /*
+   * Método responsável por salvar o comprovante;
+   */
   private void setComprovante(List<String> obtemComprovanteCompleto) {
     this.comprovante = obtemComprovanteCompleto;
   }
 
-  @ReactMethod
-  public void getRetorno(Callback callback){
-   callback.invoke(this.retornoText);
-  }
-
+  /*
+   * Método responsável por obter o comprovante salvo durante uma transação que obteve sucesso.
+   */
   @ReactMethod
   public void obterComprovante(Callback callback){
     String teste = this.comprovante.toString();
