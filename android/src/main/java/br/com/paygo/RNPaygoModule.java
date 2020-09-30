@@ -173,13 +173,14 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
    * Método responsável por efetuar uma transação com DÉBITO A VISTA.
    */
   @ReactMethod
-  public void vendaDebito(String valor, String fiscal, final Callback callback){
+  public void vendaDebito(String valor,  String fatura, String fiscal, final Callback callback){
     final String[] final_response = new String[1];
 
     mEntradaTransacao = new EntradaTransacao(Operacoes.VENDA, String.valueOf(new Random().nextLong()));
     mEntradaTransacao.informaDocumentoFiscal(fiscal);
     mEntradaTransacao.informaValorTotal(valor);
     mEntradaTransacao.informaCodigoMoeda("986");
+    mEntradaTransacao.informaNumeroFatura(fatura);
 
     mEntradaTransacao.informaTipoCartao(Cartoes.CARTAO_DEBITO);
     mEntradaTransacao.informaTipoFinanciamento(Financiamentos.A_VISTA);
