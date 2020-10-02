@@ -51,7 +51,7 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
   private Boolean suporta_desconto = false;
 
   //Retorno venda
-  private List<String> comprovante;
+  private String comprovante;
 
   public RNPaygoModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -105,6 +105,7 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void vendaCredito(Integer parcelas, String valor, String fiscal, String fatura, final Callback callback){
     final String[] final_response = new String[1];
+    final String[] comp = new String[1];
 
     mEntradaTransacao = new EntradaTransacao(Operacoes.VENDA, String.valueOf(new Random().nextLong()));
     mEntradaTransacao.informaDocumentoFiscal(fiscal);
@@ -152,7 +153,8 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
           if(mSaidaTransacao.obtemInformacaoConfirmacao() == true){
             if(mSaidaTransacao.obtemResultadoTransacao() == 0){
               final_response[0] = "{"+"'resultado':'"+mSaidaTransacao.obtemMensagemResultado().trim()+"',"+"'status':true, 'comprovante': true}";
-              setComprovante(mSaidaTransacao.obtemComprovanteCompleto());
+              comp[0] = "{'codigo_autorizacao': '"+mSaidaTransacao.obtemCodigoAutorizacao()+"', 'data_hora': '"+mSaidaTransacao.obtemDataHoraTransacao()+"', 'identificador_confirma_transacao': '"+mSaidaTransacao.obtemIdentificadorConfirmacaoTransacao()+"', 'identificador_estabelecimento': '"+mSaidaTransacao.obtemIdentificadorEstabelecimento()+"', 'mensagem_resultado': '"+mSaidaTransacao.obtemMensagemResultado()+"', 'nome_cartao': '"+mSaidaTransacao.obtemNomeCartao()+"', 'nome_estabelecimento': '"+mSaidaTransacao.obtemNomeEstabelecimento()+"', 'nome_portador_cartao': '"+mSaidaTransacao.obtemNomePortadorCartao()+"', 'provedor': '"+mSaidaTransacao.obtemNomeProvedor()+"', 'parcelas':"+mSaidaTransacao.obtemNumeroParcelas()+", 'valor':'"+mSaidaTransacao.obtemValorTotal()+"', 'tipo_financiamento':'"+mSaidaTransacao.obtemTipoFinanciamento()+"', 'tipo_cartao': '"+mSaidaTransacao.obtemTipoCartao()+"', 'pan_mascarado': '"+mSaidaTransacao.obtemPanMascarado()+"', 'nsu_local': '"+mSaidaTransacao.obtemNsuLocal()+"', 'nsu_host': '"+mSaidaTransacao.obtemNsuHost()+"', 'documento_fiscal': '"+mSaidaTransacao.obtemDocumentoFiscal()+"'}";
+              setComprovante(comp[0]);
               callback.invoke(final_response[0]);
             }else{
               final_response[0] = "{"+"'resultado':'"+mSaidaTransacao.obtemMensagemResultado().trim()+"',"+"'status':false, 'comprovante': false}";
@@ -175,6 +177,7 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void vendaDebito(String valor,  String fatura, String fiscal, final Callback callback){
     final String[] final_response = new String[1];
+    final String[] comp = new String[1];
 
     mEntradaTransacao = new EntradaTransacao(Operacoes.VENDA, String.valueOf(new Random().nextLong()));
     mEntradaTransacao.informaDocumentoFiscal(fiscal);
@@ -217,7 +220,8 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
           if(mSaidaTransacao.obtemInformacaoConfirmacao() == true){
             if(mSaidaTransacao.obtemResultadoTransacao() == 0){
               final_response[0] = "{"+"'resultado':'"+mSaidaTransacao.obtemMensagemResultado().trim()+"',"+"'status': true, 'comprovante': true}";
-              setComprovante(mSaidaTransacao.obtemComprovanteCompleto());
+              comp[0] = "{'codigo_autorizacao': '"+mSaidaTransacao.obtemCodigoAutorizacao()+"', 'data_hora': '"+mSaidaTransacao.obtemDataHoraTransacao()+"', 'identificador_confirma_transacao': '"+mSaidaTransacao.obtemIdentificadorConfirmacaoTransacao()+"', 'identificador_estabelecimento': '"+mSaidaTransacao.obtemIdentificadorEstabelecimento()+"', 'mensagem_resultado': '"+mSaidaTransacao.obtemMensagemResultado()+"', 'nome_cartao': '"+mSaidaTransacao.obtemNomeCartao()+"', 'nome_estabelecimento': '"+mSaidaTransacao.obtemNomeEstabelecimento()+"', 'nome_portador_cartao': '"+mSaidaTransacao.obtemNomePortadorCartao()+"', 'provedor': '"+mSaidaTransacao.obtemNomeProvedor()+"', 'parcelas':"+mSaidaTransacao.obtemNumeroParcelas()+", 'valor':'"+mSaidaTransacao.obtemValorTotal()+"', 'tipo_financiamento':'"+mSaidaTransacao.obtemTipoFinanciamento()+"', 'tipo_cartao': '"+mSaidaTransacao.obtemTipoCartao()+"', 'pan_mascarado': '"+mSaidaTransacao.obtemPanMascarado()+"', 'nsu_local': '"+mSaidaTransacao.obtemNsuLocal()+"', 'nsu_host': '"+mSaidaTransacao.obtemNsuHost()+"', 'documento_fiscal': '"+mSaidaTransacao.obtemDocumentoFiscal()+"'}";
+              setComprovante(comp[0]);
               callback.invoke(final_response[0]);
             }else{
               final_response[0] = "{"+"'resultado':'"+mSaidaTransacao.obtemMensagemResultado().trim()+"',"+"'status':false, 'comprovante': false}";
@@ -236,7 +240,7 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
   /*
    * Método responsável por salvar o comprovante;
    */
-  private void setComprovante(List<String> obtemComprovanteCompleto) {
+  private void setComprovante(String obtemComprovanteCompleto) {
     this.comprovante = obtemComprovanteCompleto;
   }
 
@@ -245,7 +249,7 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
    */
   @ReactMethod
   public void obterComprovante(Callback callback){
-    String teste = this.comprovante.toString();
+    String teste = this.comprovante;
     callback.invoke(teste);
   }
 }
