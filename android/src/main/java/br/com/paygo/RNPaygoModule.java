@@ -66,6 +66,7 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
     return "RNPaygo";
   }
 
+
   /*
    * Método responsável pelas configurações inicias do pacote.
    */
@@ -82,6 +83,35 @@ public class RNPaygoModule extends ReactContextBaseJavaModule {
     }catch (Exception e){
       callback.invoke("{"+"'resultado':'Não Configurado.',"+"'status':false}");
     }
+  }
+
+  /*
+   * Método responsável pelas configurações administrativas.
+   */
+  @ReactMethod
+  public void callADM(){
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          mEntradaTransacao = new EntradaTransacao(Operacoes.ADMINISTRATIVA, String.valueOf(new Random().nextLong()));
+
+          mSaidaTransacao = mTransacoes
+                  .realizaTransacao(mEntradaTransacao);
+          mConfirmacao
+                  .informaIdentificadorConfirmacaoTransacao(mSaidaTransacao
+                          .obtemIdentificadorConfirmacaoTransacao());
+
+        } catch (Exception e) {
+          System.out.println("ERRO");
+          System.out.println(e);
+        } finally {
+          mEntradaTransacao = null;
+          //mHandler.post(mostraJanelaResultado);
+          System.out.println(mensagem)
+        }
+      }
+    }).start();
   }
 
   /*

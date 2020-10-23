@@ -10,14 +10,18 @@ const inicializar_paygo = async(callback: any) => {
     await RNPaygo.inicializarPaygo(callback);
 }
 
+const inicializar_adm = async() => {
+    await RNPaygo.callADM();
+}
+
 const transacao_credito_parecelado = async(parcelas: number, valor: string, fatura: string, fiscal: string, callback: any) => {
     await RNPaygo.vendaCredito(parcelas, valor, fatura, fiscal, callback);
 }
 const transacao_credito = async(valor: string, fatura: string, fiscal: string, callback: any) => {
     await RNPaygo.vendaCredito(1, valor, fatura, fiscal, callback);
 }
-const transacao_debito = async(valor: string, fiscal: string, callback:any) => {
-    await RNPaygo.vendaDebito(valor, fiscal, callback);
+const transacao_debito = async(valor: string, fatura: string, fiscal: string, callback:any) => {
+    await RNPaygo.vendaDebito(valor, fatura, fiscal, callback);
 }
 const obter_comprovante = async(callback: any) => {
     await RNPaygo.obterComprovante(callback);
@@ -26,6 +30,7 @@ const obter_comprovante = async(callback: any) => {
 export {
     configurar_dados,
     inicializar_paygo,
+    inicializar_adm,
     transacao_credito,
     transacao_credito_parecelado,
     transacao_debito,
